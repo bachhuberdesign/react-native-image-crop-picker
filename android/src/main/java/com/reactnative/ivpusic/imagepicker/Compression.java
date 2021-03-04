@@ -127,8 +127,9 @@ class Compression {
     }
 
     synchronized void compressVideo(final Activity activity, final ReadableMap options, final String originalVideo, final String compressedVideo, final Promise promise) {
-        // todo: video compression
-        // failed attempt 1: ffmpeg => slow and licensing issues
+        // TODO: Implement video compression
+        // Options: MediaCodec, LightCompressor (MediaCodec wrapper), FFMpeg
+        // Attempt 1 will be with LightCompressor
         promise.resolve(originalVideo);
     }
 }
