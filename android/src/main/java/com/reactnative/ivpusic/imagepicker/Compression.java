@@ -59,7 +59,7 @@ class Compression {
         File imageDirectory = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
 
         if(!imageDirectory.exists()) {
-            Log.d("image-crop-picker", "Pictures Directory is not existing. Will create this directory.");
+            Log.d("image-crop-picker", "Pictures directory does not exist. Will create this directory.");
             imageDirectory.mkdirs();
         }
 
@@ -105,8 +105,6 @@ class Compression {
             return new File(originalImagePath);
         }
 
-        Log.d("image-crop-picker", "Image compression activated");
-
         // compression quality
         int targetQuality = quality != null ? (int) (quality * 100) : 100;
         Log.d("image-crop-picker", "Compressing image with quality " + targetQuality);
@@ -130,6 +128,40 @@ class Compression {
         // TODO: Implement video compression
         // Options: MediaCodec, LightCompressor (MediaCodec wrapper), FFMpeg
         // Attempt 1 will be with LightCompressor
-        promise.resolve(originalVideo);
+
+        VideoCompressor.start(originalVideo, compressedVideo, new CompressionListener() {
+            @Override
+            public void onStart() {
+                // Compression start
+            }
+
+            @Override
+            public void onSuccess() {
+                // On Compression success
+            }
+
+            @Override
+            public void onFailure(String failureMessage) {
+                // On Failure
+            }
+
+            @Override
+            public void onProgress(float v) {
+                // Update UI with progress value
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        progress.setText(progressPercent + "%");
+                        progressBar.setProgress((int) progressPercent);
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled() {
+                // On Cancelled
+            }
+        }, VideoQuality.MEDIUM, false, false);
+
+        promise.resolve(compressedVideo);
     }
 }
