@@ -58,7 +58,7 @@ class Compression {
 
         File imageDirectory = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
 
-        if(!imageDirectory.exists()) {
+        if (!imageDirectory.exists()) {
             Log.d("image-crop-picker", "Pictures directory does not exist. Will create this directory.");
             imageDirectory.mkdirs();
         }
@@ -76,7 +76,7 @@ class Compression {
     }
 
     int getRotationInDegreesForOrientationTag(int orientationTag) {
-        switch(orientationTag){
+        switch (orientationTag) {
             case ExifInterface.ORIENTATION_ROTATE_90:
                 return 90;
             case ExifInterface.ORIENTATION_ROTATE_270:
@@ -125,43 +125,50 @@ class Compression {
     }
 
     synchronized void compressVideo(final Activity activity, final ReadableMap options, final String originalVideo, final String compressedVideo, final Promise promise) {
-        // TODO: Implement video compression
-        // Options: MediaCodec, LightCompressor (MediaCodec wrapper), FFMpeg
-        // Attempt 1 will be with LightCompressor
+        String compressVideoQuality = options.hasKey("compressVideoQuality") ? options.getString("compressVideoQuality") : null;
+        VideoQuality videoQuality = null;
+
+        switch (compressVideoPreset) {
+            case "LowQuality":
+                videoQuality = VideoQuality.LOW;
+                break;
+            case "MediumQuality":
+                videoQuality = VideoQuality.MEDIUM;
+                break;
+            case "HighestQuality":
+                videoQuality = VideoQuality.HIGH;
+                break;
+            case "Passthrough":
+                promise.resolve(originalVideo);
+                return;
+            default:
+                videoQuality = VideoQuality.MEDIUM;
+                break;
+        }
 
         VideoCompressor.start(originalVideo, compressedVideo, new CompressionListener() {
             @Override
             public void onStart() {
-                // Compression start
             }
 
             @Override
             public void onSuccess() {
-                // On Compression success
+                promise.resolve(compressedVideo);
             }
 
             @Override
-            public void onFailure(String failureMessage) {
-                // On Failure
+            public void onFailure(@NotNull String s) {
+                promise.reject(new Throwable("Compression failed: " + s));
             }
 
             @Override
             public void onProgress(float v) {
-                // Update UI with progress value
-                runOnUiThread(new Runnable() {
-                    public void run() {
-                        progress.setText(progressPercent + "%");
-                        progressBar.setProgress((int) progressPercent);
-                    }
-                });
             }
 
             @Override
             public void onCancelled() {
-                // On Cancelled
+                promise.reject(new Throwable("Compression Cancelled"));
             }
-        }, VideoQuality.MEDIUM, false, false);
-
-        promise.resolve(compressedVideo);
+        }, videoQuality, false, false);
     }
 }
