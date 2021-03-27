@@ -9,6 +9,9 @@ import android.media.ExifInterface;
 import android.os.Environment;
 import android.util.Log;
 
+import com.abedelazizshe.lightcompressorlibrary.CompressionListener;
+import com.abedelazizshe.lightcompressorlibrary.VideoCompressor;
+import com.abedelazizshe.lightcompressorlibrary.VideoQuality;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReadableMap;
 
@@ -158,7 +161,7 @@ class Compression {
 
             @Override
             public void onFailure(@NotNull String s) {
-                promise.reject(new Throwable("Compression failed: " + s));
+                promise.reject(new Throwable("Video compression failed: " + s));
             }
 
             @Override
@@ -167,7 +170,7 @@ class Compression {
 
             @Override
             public void onCancelled() {
-                promise.reject(new Throwable("Compression Cancelled"));
+                promise.reject(new Throwable("Video compression cancelled"));
             }
         }, videoQuality, false, false);
     }
