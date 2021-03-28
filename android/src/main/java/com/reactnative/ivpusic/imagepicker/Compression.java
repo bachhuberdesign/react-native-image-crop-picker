@@ -15,6 +15,8 @@ import com.abedelazizshe.lightcompressorlibrary.VideoQuality;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReadableMap;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -131,7 +133,7 @@ class Compression {
         String compressVideoQuality = options.hasKey("compressVideoQuality") ? options.getString("compressVideoQuality") : null;
         VideoQuality videoQuality = null;
 
-        switch (compressVideoPreset) {
+        switch (compressVideoQuality) {
             case "LowQuality":
                 videoQuality = VideoQuality.LOW;
                 break;
