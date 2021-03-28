@@ -128,15 +128,15 @@ class Compression {
     }
 
     synchronized void compressVideo(final Activity activity, final ReadableMap options, final String originalVideo, final String compressedVideo, final Promise promise) {
-        String compressVideoQuality = options.hasKey("compressVideoQuality") ? options.getString("compressVideoQuality") : "MediumQuality";
+        String compressVideoPreset = options.hasKey("compressVideoPreset") ? options.getString("compressVideoPreset") : "MediumQuality";
 
-        if (compressVideoQuality != null && compressVideoQuality.equals("Passthrough")) {
+        if (compressVideoPreset != null && compressVideoPreset.equals("Passthrough")) {
             promise.resolve(originalVideo);
             return;
         }
 
         VideoQuality videoQuality = null;
-        switch (compressVideoQuality) {
+        switch (compressVideoPreset) {
             case "LowQuality":
                 videoQuality = VideoQuality.LOW;
                 break;
