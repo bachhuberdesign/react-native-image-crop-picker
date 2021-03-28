@@ -15,8 +15,6 @@ import com.abedelazizshe.lightcompressorlibrary.VideoQuality;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReadableMap;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -130,50 +128,57 @@ class Compression {
     }
 
     synchronized void compressVideo(final Activity activity, final ReadableMap options, final String originalVideo, final String compressedVideo, final Promise promise) {
-        String compressVideoQuality = options.hasKey("compressVideoQuality") ? options.getString("compressVideoQuality") : null;
-        VideoQuality videoQuality = null;
-
-        switch (compressVideoQuality) {
-            case "LowQuality":
-                videoQuality = VideoQuality.LOW;
-                break;
-            case "MediumQuality":
-                videoQuality = VideoQuality.MEDIUM;
-                break;
-            case "HighestQuality":
-                videoQuality = VideoQuality.HIGH;
-                break;
-            case "Passthrough":
-                promise.resolve(originalVideo);
-                return;
-            default:
-                videoQuality = VideoQuality.MEDIUM;
-                break;
-        }
+//        String compressVideoQuality = options.hasKey("compressVideoQuality") ? options.getString("compressVideoQuality") : null;
+//        VideoQuality videoQuality = null;
+//
+//        if (compressVideoQuality != null && compressVideoQuality.equals("Passthrough")) {
+//            promise.resolve(originalVideo);
+//            return;
+//        }
+//
+//        switch (compressVideoQuality) {
+//            case "LowQuality":
+//                videoQuality = VideoQuality.LOW;
+//                break;
+//            case "MediumQuality":
+//                videoQuality = VideoQuality.MEDIUM;
+//                break;
+//            case "HighestQuality":
+//                videoQuality = VideoQuality.HIGH;
+//                break;
+//            default:
+//                videoQuality = VideoQuality.MEDIUM;
+//                break;
+//        }
 
         VideoCompressor.start(originalVideo, compressedVideo, new CompressionListener() {
             @Override
             public void onStart() {
+                Log.d("image-crop-picker", "onStart()");
             }
 
             @Override
             public void onSuccess() {
+                Log.d("image-crop-picker", "onSuccess(): " + compressedVideo);
                 promise.resolve(compressedVideo);
             }
 
             @Override
-            public void onFailure(@NotNull String s) {
-                promise.reject(new Throwable("Video compression failed: " + s));
+            public void onFailure(String failureMessage) {
+                Log.d("image-crop-picker", "onFailure(): " + failureMessage);
+                promise.reject(new Throwable("Video compression failed: " + failureMessage));
             }
 
             @Override
             public void onProgress(float v) {
+                Log.d("image-crop-picker", "onProgress()");
             }
 
             @Override
             public void onCancelled() {
+                Log.d("image-crop-picker", "onCancelled()");
                 promise.reject(new Throwable("Video compression cancelled"));
             }
-        }, videoQuality, false, false);
+        }, VideoQuality.MEDIUM, false, false);
     }
 }
