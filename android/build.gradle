@@ -5,7 +5,6 @@ def DEFAULT_COMPILE_SDK_VERSION = 30
 def DEFAULT_BUILD_TOOLS_VERSION = "29.0.3"
 def DEFAULT_TARGET_SDK_VERSION = 30
 def DEFAULT_MIN_SDK_VERSION = 16
-def KOTLIN_VERSION = "1.4.10"
 
 buildscript {
     // The Android Gradle plugin is only required when opening the android folder stand-alone.
@@ -26,7 +25,7 @@ buildscript {
     }
 
     dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$KOTLIN_VERSION"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.30"
     }
 }
 
@@ -59,5 +58,5 @@ dependencies {
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
     implementation 'com.github.yalantis:ucrop:2.2.6-native'
     implementation 'com.github.AbedElazizShe:LightCompressor:0.8.0'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$KOTLIN_VERSION"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.30"
 }
